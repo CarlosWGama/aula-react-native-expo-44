@@ -5,6 +5,7 @@ import { Input } from 'react-native-elements';
 export interface InputRoundProps {
     texto?:string;
     senha?:boolean;
+    onBlur?(campo:any):void;
     icone: string;
     placeholder: string;
     onChangeText?(text:string):void;
@@ -17,6 +18,7 @@ function InputRoundComponent (props: InputRoundProps) {
             {props.texto && <Text style={styles.texto}>{props.texto}</Text>}
             <Input placeholder={props.placeholder}  
             leftIcon={{name:props.icone, color:'white'}}
+            onBlur={props.onBlur}
             placeholderTextColor="white"
             inputContainerStyle={styles.containerInput}
             inputStyle={{color:'white'}} 
