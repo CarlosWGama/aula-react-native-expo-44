@@ -2,11 +2,12 @@ import * as React from 'react';
 import { View, Text, ImageBackground, StyleSheet } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import bg from './../../assets/imgs/background.png';
+import { InputRound } from './input';
 
-export interface LoginscreenProps {
+export interface LoginScreenProps {
 }
 
-export function Loginscreen (props: LoginscreenProps) {
+export function LoginScreen (props: LoginScreenProps) {
 
     const [email, setEmail] = React.useState('');
     const [senha, setSenha] = React.useState('');
@@ -17,20 +18,10 @@ export function Loginscreen (props: LoginscreenProps) {
                 <Text style={styles.logo}>APP</Text>
 
                 {/* EMAIL  */}
-                <Input placeholder="Digite seu email" 
-                    value={email}
-                    onChangeText={setEmail}
-                    inputContainerStyle={styles.containerInput}
-                    inputStyle={{color:'white'}}
-                    leftIcon={{name:'person', color: 'white'}} />
+                <InputRound placeholder='Digite seu email' icone='person' onChangeText={setEmail} />
 
                 {/* SENHA */}
-                <Input placeholder="Digite sua senha" 
-                    value={senha} onChangeText={setSenha}
-                    inputContainerStyle={styles.containerInput}
-                    inputStyle={{color:'white'}}
-                    leftIcon={{name:'lock', color: 'white'}}
-                    secureTextEntry={true} />
+                <InputRound placeholder='Digite sua senha' icone='lock' senha  onChangeText={setSenha}/>
 
                 <Button title="Logar" containerStyle={{borderRadius:30}} raised={true} />
 
@@ -47,12 +38,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 10,
         alignItems: 'stretch'
-    },
-    containerInput: {
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        borderRadius: 30,
-        padding: 5,
-        marginBottom: -10
     },
     logo: { color: 'white', fontSize: 50, textAlign: 'center'},
     cadastrar: {
