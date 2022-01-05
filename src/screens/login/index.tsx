@@ -7,6 +7,10 @@ export interface LoginscreenProps {
 }
 
 export function Loginscreen (props: LoginscreenProps) {
+
+    const [email, setEmail] = React.useState('');
+    const [senha, setSenha] = React.useState('');
+
     return (
         <ImageBackground source={bg} style={styles.background}>
             <View style={styles.container}>
@@ -14,12 +18,15 @@ export function Loginscreen (props: LoginscreenProps) {
 
                 {/* EMAIL  */}
                 <Input placeholder="Digite seu email" 
+                    value={email}
+                    onChangeText={setEmail}
                     inputContainerStyle={styles.containerInput}
                     inputStyle={{color:'white'}}
                     leftIcon={{name:'person', color: 'white'}} />
 
                 {/* SENHA */}
                 <Input placeholder="Digite sua senha" 
+                    value={senha} onChangeText={setSenha}
                     inputContainerStyle={styles.containerInput}
                     inputStyle={{color:'white'}}
                     leftIcon={{name:'lock', color: 'white'}}
