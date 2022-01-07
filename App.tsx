@@ -1,7 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { LoginScreen } from './src/screens/login';
+import React from 'react';
+import { NavegacaoPrincipal } from './src/navigation';
 
 export default function App() {
-  return (<LoginScreen/>);
+  return (<NavegacaoPrincipal/>);
 }
