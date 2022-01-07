@@ -15,7 +15,7 @@ export const NavegacaoDrawer = () => (
             <Button type="clear" title="Sair"  onPress={() => props.navigation.navigate('login')} />
         </View>
     )}>
-        <Drawer.Screen name="tarefa" component={NavegacaoTarefa} options={{drawerLabel:"Tarefas", drawerIcon: () => <MaterialIcons name="done" /> }} />
+        <Drawer.Screen name="tarefas" component={NavegacaoTarefa} options={{drawerLabel:"Tarefas", drawerIcon: () => <MaterialIcons name="done" /> }} />
         <Drawer.Screen name="opcoes" component={NavegacaoConfiguracao} options={{drawerLabel: 'Configurações', drawerIcon: () => <MaterialIcons name="settings" />}}  />
     </Drawer.Navigator>
 )
