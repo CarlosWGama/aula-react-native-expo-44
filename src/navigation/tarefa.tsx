@@ -3,13 +3,14 @@ import { HomeScreen } from '../screens/home';
 import { TarefaScreen } from '../screens/tarefa';
 
 export type TarefaNavegacaoParams = {
-    home: undefined
-    tarefa: {tarefa: any}
+    home: undefined,
+    tarefa: {tarefa: any},
+    login: undefined
 }
 
 const Stack = createNativeStackNavigator<TarefaNavegacaoParams>();
 
-export const TarefaNavegacao = () => (
+export const NavegacaoTarefa = () => (
     <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="home" component={HomeScreen} />
         <Stack.Screen name="tarefa" component={TarefaScreen} />
