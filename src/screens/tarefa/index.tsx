@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, Image, Button, StyleSheet, Platform } from 'react-native';
 import { Toolbar } from '../../components/toolbar';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Input } from 'react-native-elements';
 import { Formik } from 'formik';
@@ -10,16 +10,20 @@ import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Tarefa } from '../../model/tarefa';
 import camera from './../../assets/imgs/camera_on.png';
+import { TarefaNavegacaoParams } from '../../navigation/tarefa';
 
-export function TarefaScreen (props: any) {
-  const route = useRoute();
+export interface TarefaScreenProps {
+  route: RouteProp<TarefaNavegacaoParams, "tarefa">
+}
+
+export function TarefaScreen (props: TarefaScreenProps) {
   const [exibirCalendario, setExibirCalendario] = React.useState(false);
   const nav = useNavigation();
+  const { route } = props;
   
   //recupera a tarefa passada ou inicializa
-  //@ts-ignore
-  const tarefa: Tarefa = (route.params?.tarefa == null ? {id: null, descricao: '', data: moment().format('DD/MM/YYYY')} : route.params?.tarefa)
-  const titulo = (tarefa.id == null ? 'Cadastrar ' : 'Editar ') + "Tarefa"; 
+  const [ tarefa, setTarefa ] = React.useState<Tarefa>(route.params.tarefa ?? {descricao: '', data:  moment().format('DD/MM/YYYY')});
+    const titulo = (tarefa.id == null ? 'Cadastrar ' : 'Editar ') + "Tarefa"; 
 
   //Tirar foto
   const abrirCamera = async () => {
@@ -38,6 +42,7 @@ export function TarefaScreen (props: any) {
           
             <Formik
               initialValues={tarefa}
+              enableReinitialize
               validationSchema={Yup.object().shape({
                 descricao: Yup.string().required('Descrição é obriatório'),
                 data: Yup.string().required('Data é obrigatório')
@@ -48,7 +53,7 @@ export function TarefaScreen (props: any) {
               <View style={{padding:5}}>
                 {/* DESCRIÇÃO */}
                 <Text>Descrição</Text>
-                <Input placeholder="Digite uma descrição" onChangeText={handleChange('descricao')} onBlur={handleBlur("descricao")}></Input>
+                <Input placeholder="Digite uma descrição" value={values.descricao} onChangeText={handleChange('descricao')} onBlur={handleBlur("descricao")}></Input>
                 { touched.descricao && errors.descricao && <Text style={styles.erro}>{errors.descricao}</Text>}
 
                 {/* DATA */}
