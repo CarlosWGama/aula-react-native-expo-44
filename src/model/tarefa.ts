@@ -1,6 +1,6 @@
 
 export type Tarefa = { 
-    id: number,
+    id?: string,
     descricao: string, 
     data: string 
 }
