@@ -13,8 +13,8 @@ const Stack = createNativeStackNavigator<NavegacaoPrincipalParams>();
 export const NavegacaoPrincipal = () => (
     <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="login" component={LoginScreen}/>
             <Stack.Screen name="app" component={NavegacaoDrawer} />
+            <Stack.Screen name="login" component={LoginScreen}/>
         </Stack.Navigator>
     </NavigationContainer>
 )

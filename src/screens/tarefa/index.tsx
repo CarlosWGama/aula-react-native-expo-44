@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, Button, StyleSheet, Platform } from 'react-native';
+import { View, Text, Image, Button, StyleSheet, Platform, CameraRoll } from 'react-native';
 import { Toolbar } from '../../components/toolbar';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -11,6 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Tarefa } from '../../model/tarefa';
 import camera from './../../assets/imgs/camera_on.png';
 import { TarefaNavegacaoParams } from '../../navigation/tarefa';
+import * as ImagePicker from 'expo-image-picker';
 
 export interface TarefaScreenProps {
   route: RouteProp<TarefaNavegacaoParams, "tarefa">
@@ -26,8 +27,22 @@ export function TarefaScreen (props: TarefaScreenProps) {
     const titulo = (tarefa.id == null ? 'Cadastrar ' : 'Editar ') + "Tarefa"; 
 
   //Tirar foto
-  const abrirCamera = async () => {
-    console.log('Abrir camera')
+  const abrirCamera = async (setFieldValue) => {
+    const permissao = await ImagePicker.requestCameraPermissionsAsync();
+    console.log(permissao)
+    if (permissao.granted) {
+      let foto =  await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        base64: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.3
+      })
+
+      if (!foto.cancelled) 
+        setFieldValue("imagem", 'data:image/jpeg;base64,'+foto.base64)
+      
+    }
+
   }
   
   //Salvar
@@ -87,8 +102,8 @@ export function TarefaScreen (props: TarefaScreenProps) {
                 
                 {/* IMAGEM/FOTO */}
                 <View style={{alignItems:'center'}}>
-                  <TouchableOpacity onPress={abrirCamera}>
-                    <Image source={camera} style={[styles.img]}/>
+                  <TouchableOpacity onPress={() => abrirCamera(setFieldValue)}>
+                    <Image source={values.imagem ? {uri:values.imagem} : camera} style={[styles.img]}/>
                   </TouchableOpacity>
                 </View>
 
