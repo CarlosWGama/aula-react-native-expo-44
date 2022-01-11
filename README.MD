@@ -24,7 +24,8 @@ Aulas disponíveis:
 - git checkout --force flatlist2
 - git checkout --force modal
 - git checkout --force camera
-- git checkout --force webservice
+- git checkout --force axios
+- git checkout --force context_api
 - git checkout --force firebase_login
 - git checkout --force firebase_realtime
 - git checkout --force firebase_firestore
