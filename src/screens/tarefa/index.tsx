@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, Button, StyleSheet, Platform, CameraRoll } from 'react-native';
+import { View, Text, Image, Button, StyleSheet, Platform, CameraRoll, ToastAndroid } from 'react-native';
 import { Toolbar } from '../../components/toolbar';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -12,6 +12,7 @@ import { Tarefa } from '../../model/tarefa';
 import camera from './../../assets/imgs/camera_on.png';
 import { TarefaNavegacaoParams } from '../../navigation/tarefa';
 import * as ImagePicker from 'expo-image-picker';
+import api from '../../providers/api';
 
 export interface TarefaScreenProps {
   route: RouteProp<TarefaNavegacaoParams, "tarefa">
@@ -46,9 +47,21 @@ export function TarefaScreen (props: TarefaScreenProps) {
   }
   
   //Salvar
-  const salvar = async (dados) => {
-    console.log(dados);
-  }
+  const salvar = async (tarefa: Tarefa) => {
+    console.log(tarefa);
+    try {
+      if (!tarefa.id) //Cadastrar
+        await api.post('/tarefas', {tarefa})
+      else //Atualiza
+        await api.put(`/tarefas/${tarefa.id}`, {tarefa})
+
+      ToastAndroid.show('Ação realizada com sucesso', ToastAndroid.LONG);
+      nav.goBack();
+      
+    } catch (e) {
+      ToastAndroid.show('Falha ao realizar a ação', ToastAndroid.LONG);
+    }
+  } 
 
   
   return (
@@ -64,7 +77,7 @@ export function TarefaScreen (props: TarefaScreenProps) {
               })}
               onSubmit={salvar}
             >
-            {({values, setFieldValue, handleSubmit, handleChange, errors, touched, handleBlur, setFieldTouched }) => (
+            {({values, setFieldValue, handleSubmit, handleChange, errors, touched, handleBlur, setFieldTouched, isSubmitting }) => (
               <View style={{padding:5}}>
                 {/* DESCRIÇÃO */}
                 <Text>Descrição</Text>
@@ -108,7 +121,7 @@ export function TarefaScreen (props: TarefaScreenProps) {
                 </View>
 
                 {/* BOTÃO SALVAR */}
-                <Button title="Salvar" onPress={() => handleSubmit()} />
+                <Button title={isSubmitting ? 'Aguarde' : 'Salvar'} onPress={() => handleSubmit()} disabled={isSubmitting} />
               </View>)}
             </Formik>
       </View>

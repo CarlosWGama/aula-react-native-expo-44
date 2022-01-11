@@ -9,6 +9,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { NavegacaoPrincipalParams } from '../../navigation';
 import { Modalize } from 'react-native-modalize';
+import api from '../../providers/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface LoginScreenProps {
 }
@@ -16,7 +18,6 @@ export interface LoginScreenProps {
 export function LoginScreen (props: LoginScreenProps) {
 
     //Constantes
-    const [erro, setErro] = React.useState<null|string>(null);
     type navProps = NativeStackNavigationProp<NavegacaoPrincipalParams, 'login'>;
     const nav = useNavigation<navProps>();
     const modal = React.useRef<Modalize>();
@@ -24,19 +25,25 @@ export function LoginScreen (props: LoginScreenProps) {
     //Funções
     const logar = async (dados) => {
         console.log(dados)  
-        setErro(null);
         
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-
-        if (dados.email == "teste@teste.com" && dados.senha == "123456")
-        nav.navigate('app');
-        else
-        ToastAndroid.show("Email ou senha incorreta", 3000);
-        //setErro('Email ou senha incorreto');
+        await api.post('/login', dados)
+            .then(response => {
+                AsyncStorage.setItem('jwt', response.data.jwt);
+                nav.navigate('app')
+            })
+            .catch(() => ToastAndroid.show("Email ou senha incorreta", 3000));
     }
     
-    const cadastrar = async (dados) => {
-        console.log(dados)
+    //Cadastra um usuário
+    const cadastrar = async (usuario) => {
+        console.log(usuario)
+        
+        await api.post('/usuarios', {usuario})
+            //retornou código de sucesso 201
+            .then(() => ToastAndroid.show('Cadastrado com sucesso', ToastAndroid.LONG))
+            //retornou código de erro 30x/40x/50x
+            .catch(() => ToastAndroid.show('Falha ao cadastrar usuário', ToastAndroid.LONG));
+         
         modal.current?.close();
     }
 
@@ -62,7 +69,6 @@ export function LoginScreen (props: LoginScreenProps) {
                         <InputRound placeholder='Digite sua senha' icone='lock' senha  onChangeText={handleChange('senha')} onBlur={handleBlur('senha')}/>
                         {touched.senha && errors.senha && <Text style={styles.error}>{errors.senha}</Text>}
 
-                        { erro && <Text style={styles.errorLogin}>{erro}</Text>}
                         {isSubmitting && <ActivityIndicator size="large" color="blue" />}
                         {!isSubmitting && <Button title="Logar" onPress={() => handleSubmit()} containerStyle={{borderRadius:30}} />}
 
@@ -79,14 +85,15 @@ export function LoginScreen (props: LoginScreenProps) {
                 modalHeight={400}  
             >
                 <Formik
-                    initialValues={{email:'', senha:''}}
+                    initialValues={{email:'', senha:'', nome: ''}}
                     onSubmit={cadastrar}
                 >
-                    {({handleChange, handleSubmit}) => (
+                    {({handleChange, handleSubmit, isSubmitting}) => (
                         <>
                             <Input onChangeText={handleChange('email')} placeholder='Digite seu email' keyboardType='email-address' />
+                            <Input onChangeText={handleChange('nome')} placeholder='Digite seu nome'  />
                             <Input onChangeText={handleChange('senha')} placeholder='Digite sua senha' secureTextEntry />
-                            <Button type='clear' onPress={() => handleSubmit()} title="Cadastrar" />
+                            <Button type='clear' onPress={() => handleSubmit()} title="Cadastrar" disabled={isSubmitting} />
                         </>
                         )}
                 </Formik>
