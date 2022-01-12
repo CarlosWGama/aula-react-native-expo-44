@@ -11,6 +11,7 @@ import { NavegacaoPrincipalParams } from '../../navigation';
 import { Modalize } from 'react-native-modalize';
 import api from '../../providers/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAutenticacaoContext } from '../../providers/autenticacao';
 
 export interface LoginScreenProps {
 }
@@ -21,6 +22,7 @@ export function LoginScreen (props: LoginScreenProps) {
     type navProps = NativeStackNavigationProp<NavegacaoPrincipalParams, 'login'>;
     const nav = useNavigation<navProps>();
     const modal = React.useRef<Modalize>();
+    const { setUsuario } = useAutenticacaoContext();
     
     //Funções
     const logar = async (dados) => {
@@ -28,8 +30,9 @@ export function LoginScreen (props: LoginScreenProps) {
         
         await api.post('/login', dados)
             .then(response => {
-                AsyncStorage.setItem('jwt', response.data.jwt);
+                setUsuario(dados.email);
                 nav.navigate('app')
+                AsyncStorage.setItem('jwt', response.data.jwt);
             })
             .catch(() => ToastAndroid.show("Email ou senha incorreta", 3000));
     }
