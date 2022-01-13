@@ -24,7 +24,8 @@ Aulas disponíveis:
 - git checkout --force flatlist2
 - git checkout --force modal
 - git checkout --force camera
-- git checkout --force webservice
+- git checkout --force axios
+- git checkout --force context_api
 - git checkout --force firebase_login
 - git checkout --force firebase_realtime
 - git checkout --force firebase_firestore
@@ -46,7 +47,8 @@ Aulas disponíveis:
 * **flatlist2** - Aplicando o Flatlist
 * **modal** - Adicionado Toast, Alert e Modal
 * **camera** - Adicionado a camera
-* **webservice** - Realizando conexão com WebService
+* **axios** - Realizando conexão com WebService
+* **context_api** - Aplicação do ContextAPI
 * **firebase_login** - Adicionando o Firebase e autenticação com o login
 * **firebase_realtime** - Usa o banco Real Time Database
 * **firebase_firestore** - Usa o banco Firestore

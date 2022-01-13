@@ -1,6 +1,6 @@
 import { Formik } from 'formik';
 import * as React from 'react';
-import { View, Text, ImageBackground, StyleSheet, ActivityIndicator, ToastAndroid, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, ActivityIndicator, ToastAndroid, TouchableOpacity } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import bg from './../../assets/imgs/background.png';
 import { InputRound } from './input';
@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { NavegacaoPrincipalParams } from '../../navigation';
 import { Modalize } from 'react-native-modalize';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 export interface LoginScreenProps {
 }
@@ -16,28 +17,27 @@ export interface LoginScreenProps {
 export function LoginScreen (props: LoginScreenProps) {
 
     //Constantes
-    const [erro, setErro] = React.useState<null|string>(null);
     type navProps = NativeStackNavigationProp<NavegacaoPrincipalParams, 'login'>;
     const nav = useNavigation<navProps>();
     const modal = React.useRef<Modalize>();
+    //Retorna uma instancia de autenticação
+    const auth = getAuth(); 
     
     //Funções
     const logar = async (dados) => {
-        console.log(dados)  
-        setErro(null);
+        await signInWithEmailAndPassword(auth, dados.email, dados.senha)
+            .then(() => nav.navigate('app'))
+            .catch(() => ToastAndroid.show("Email ou senha incorreta", 3000))
         
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-
-        if (dados.email == "teste@teste.com" && dados.senha == "123456")
-        nav.navigate('app');
-        else
-        ToastAndroid.show("Email ou senha incorreta", 3000);
-        //setErro('Email ou senha incorreto');
     }
     
     const cadastrar = async (dados) => {
-        console.log(dados)
-        modal.current?.close();
+        //cria um usuário usando email e senha
+        await createUserWithEmailAndPassword(auth, dados.email, dados.senha)
+            .then(usuario => ToastAndroid.show('Usuário criado com sucesso', ToastAndroid.LONG))
+            .catch(error => ToastAndroid.show('Falha ao criar usuário', ToastAndroid.LONG))
+        
+        modal.current?.close();   
     }
 
     //Renderizando
@@ -62,7 +62,6 @@ export function LoginScreen (props: LoginScreenProps) {
                         <InputRound placeholder='Digite sua senha' icone='lock' senha  onChangeText={handleChange('senha')} onBlur={handleBlur('senha')}/>
                         {touched.senha && errors.senha && <Text style={styles.error}>{errors.senha}</Text>}
 
-                        { erro && <Text style={styles.errorLogin}>{erro}</Text>}
                         {isSubmitting && <ActivityIndicator size="large" color="blue" />}
                         {!isSubmitting && <Button title="Logar" onPress={() => handleSubmit()} containerStyle={{borderRadius:30}} />}
 
@@ -82,11 +81,11 @@ export function LoginScreen (props: LoginScreenProps) {
                     initialValues={{email:'', senha:''}}
                     onSubmit={cadastrar}
                 >
-                    {({handleChange, handleSubmit}) => (
+                    {({handleChange, handleSubmit, isSubmitting}) => (
                         <>
                             <Input onChangeText={handleChange('email')} placeholder='Digite seu email' keyboardType='email-address' />
                             <Input onChangeText={handleChange('senha')} placeholder='Digite sua senha' secureTextEntry />
-                            <Button type='clear' onPress={() => handleSubmit()} title="Cadastrar" />
+                            <Button type='clear' onPress={() => handleSubmit()} title={isSubmitting ? 'Aguarde' : 'Cadastrar' } disabled={isSubmitting} />
                         </>
                         )}
                 </Formik>
