@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, Button, StyleSheet, Platform, CameraRoll } from 'react-native';
+import { View, Text, Image, Button, StyleSheet, Platform, CameraRoll, ToastAndroid } from 'react-native';
 import { Toolbar } from '../../components/toolbar';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -12,6 +12,8 @@ import { Tarefa } from '../../model/tarefa';
 import camera from './../../assets/imgs/camera_on.png';
 import { TarefaNavegacaoParams } from '../../navigation/tarefa';
 import * as ImagePicker from 'expo-image-picker';
+import { doc, setDoc, getFirestore, collection } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export interface TarefaScreenProps {
   route: RouteProp<TarefaNavegacaoParams, "tarefa">
@@ -21,7 +23,9 @@ export function TarefaScreen (props: TarefaScreenProps) {
   const [exibirCalendario, setExibirCalendario] = React.useState(false);
   const nav = useNavigation();
   const { route } = props;
-  
+  const auth = getAuth();
+  const db = getFirestore();
+
   //recupera a tarefa passada ou inicializa
   const [ tarefa, setTarefa ] = React.useState<Tarefa>(route.params.tarefa ?? {descricao: '', data:  moment().format('DD/MM/YYYY')});
     const titulo = (tarefa.id == null ? 'Cadastrar ' : 'Editar ') + "Tarefa"; 
@@ -46,8 +50,20 @@ export function TarefaScreen (props: TarefaScreenProps) {
   }
   
   //Salvar
-  const salvar = async (dados) => {
-    console.log(dados);
+  const salvar = async (tarefa:Tarefa) => {
+    
+    if (!tarefa.id) {
+      tarefa.id = doc(collection(db, 'tarefas')).id
+      tarefa.usuarioID = auth.currentUser?.uid;
+    }
+
+    //@ts-ignore
+    setDoc(doc(db, "tarefas", tarefa.id), tarefa)
+      .then(() => {
+        ToastAndroid.show('Tarefa cadastrada com sucesso', ToastAndroid.LONG);
+        nav.goBack();
+      })
+      .catch(() => ToastAndroid.show('Não foi possível completar a ação', ToastAndroid.LONG));
   }
 
   
