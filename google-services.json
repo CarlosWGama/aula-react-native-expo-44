@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "779438039625",
+    "firebase_url": "https://cesmac-ws.firebaseio.com",
+    "project_id": "cesmac-ws",
+    "storage_bucket": "cesmac-ws.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779438039625:android:b8fb95685cffbc562e1598",
+        "android_client_info": {
+          "package_name": "br.com.carloswgama.reactnative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779438039625-e47gfpebf4hlc552tffclc2sgu9l84mn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu-d6GtCY1V0p9-O9SHGXdduUrk6Cd3hA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779438039625-e47gfpebf4hlc552tffclc2sgu9l84mn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

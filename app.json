@@ -20,6 +20,9 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "br.com.carloswgama.reactnative",
+      "versionCode": 1,
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

@@ -11,6 +11,8 @@ import { NavegacaoPrincipalParams } from '../../navigation';
 import { Modalize } from 'react-native-modalize';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { AdMobBanner } from 'expo-ads-admob';
+import * as Notifications from 'expo-notifications';
+import { addDoc, doc, getFirestore, setDoc } from 'firebase/firestore';
 
 export interface LoginScreenProps {
 }
@@ -23,11 +25,20 @@ export function LoginScreen (props: LoginScreenProps) {
     const modal = React.useRef<Modalize>();
     //Retorna uma instancia de autenticação
     const auth = getAuth(); 
+    const db = getFirestore();
     
     //Funções
     const logar = async (dados) => {
         await signInWithEmailAndPassword(auth, dados.email, dados.senha)
-            .then(() => nav.navigate('app'))
+            .then(async (usuario) => {
+                const permissao = await Notifications.requestPermissionsAsync();
+                if (permissao.status == 'granted') {
+                    let token = await Notifications.getExpoPushTokenAsync();
+                    console.log(token.data)
+                    setDoc(doc(db, 'tokens', usuario.user.uid), {token: token.data})
+                }
+                nav.navigate('app')
+            })
             .catch(() => ToastAndroid.show("Email ou senha incorreta", 3000))
         
     }
