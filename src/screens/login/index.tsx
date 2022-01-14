@@ -10,6 +10,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { NavegacaoPrincipalParams } from '../../navigation';
 import { Modalize } from 'react-native-modalize';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { AdMobBanner } from 'expo-ads-admob';
 
 export interface LoginScreenProps {
 }
@@ -71,6 +72,8 @@ export function LoginScreen (props: LoginScreenProps) {
                     </View>
                 )}
             </Formik>
+
+            <AdMobBanner adUnitID='ca-app-pub-3940256099942544/6300978111' bannerSize='smartBannerLandscape' />
             {/* modalHeight define a altura que o modal abre e modalStyle aplica um estilo ao modal */}
             
             <Modalize ref={modal}
